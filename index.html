@@ -3,67 +3,178 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Anime Streaming</title>
+  <title>Animepade</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@3.3.2/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    /* For aspect ratio support in older browsers */
+    .aspect-w-16 {
+      position: relative;
+      width: 100%;
+      padding-bottom: 56.25%; /* 16:9 ratio */
+    }
+    .aspect-w-16 iframe {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      left: 0;
+      top: 0;
+      border-radius: 0.5rem;
+    }
+  </style>
 </head>
-<body class="bg-gray-900 text-white min-h-screen flex flex-col items-center p-6">
+<body class="bg-black text-white min-h-screen flex flex-col">
 
-  <h1 class="text-4xl font-bold mb-8">Anime Streaming</h1>
-
-  <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6 max-w-6xl w-full">
-
-    <div class="bg-gray-800 rounded shadow-lg overflow-hidden cursor-pointer">
-      <img src="https://cdn.myanimelist.net/images/anime/13/17405.jpg" alt="Naruto" class="w-full h-48 object-cover" />
-      <div class="p-4">
-        <h2 class="text-2xl font-semibold mb-2">Naruto</h2>
-        <p class="text-gray-400 mb-4">A young ninja's journey to become Hokage.</p>
-        <div class="aspect-w-16 aspect-h-9">
-          <iframe
-            src="https://www.youtube.com/embed/8Q0Q9GBg-hI"
-            title="Naruto"
-            frameborder="0"
-            allowfullscreen
-            class="w-full h-48 rounded"
-          ></iframe>
-        </div>
-      </div>
+  <!-- Navbar -->
+  <nav class="bg-red-700 px-6 py-4 flex items-center justify-between">
+    <div class="text-2xl font-extrabold tracking-wide cursor-pointer select-none text-white">
+      Animepade
     </div>
-
-    <div class="bg-gray-800 rounded shadow-lg overflow-hidden cursor-pointer">
-      <img src="https://cdn.myanimelist.net/images/anime/10/47347.jpg" alt="Attack on Titan" class="w-full h-48 object-cover" />
-      <div class="p-4">
-        <h2 class="text-2xl font-semibold mb-2">Attack on Titan</h2>
-        <p class="text-gray-400 mb-4">Humans fight against giant Titans.</p>
-        <div class="aspect-w-16 aspect-h-9">
-          <iframe
-            src="https://www.youtube.com/embed/MGRm4IzK1SQ"
-            title="Attack on Titan"
-            frameborder="0"
-            allowfullscreen
-            class="w-full h-48 rounded"
-          ></iframe>
-        </div>
-      </div>
+    <div class="hidden sm:flex space-x-6 text-white font-semibold">
+      <a href="#" class="hover:text-gray-300 transition">Home</a>
+      <a href="#" class="hover:text-gray-300 transition">Anime</a>
+      <a href="#" class="hover:text-gray-300 transition">Movies</a>
+      <a href="#" class="hover:text-gray-300 transition">My List</a>
     </div>
-
-    <div class="bg-gray-800 rounded shadow-lg overflow-hidden cursor-pointer">
-      <img src="https://cdn.myanimelist.net/images/anime/10/78745.jpg" alt="My Hero Academia" class="w-full h-48 object-cover" />
-      <div class="p-4">
-        <h2 class="text-2xl font-semibold mb-2">My Hero Academia</h2>
-        <p class="text-gray-400 mb-4">A world where almost everyone has superpowers.</p>
-        <div class="aspect-w-16 aspect-h-9">
-          <iframe
-            src="https://www.youtube.com/embed/JPJ4Z7h1cR0"
-            title="My Hero Academia"
-            frameborder="0"
-            allowfullscreen
-            class="w-full h-48 rounded"
-          ></iframe>
-        </div>
-      </div>
+    <div class="sm:block hidden">
+      <input
+        id="searchInput"
+        type="text"
+        placeholder="Search anime..."
+        class="rounded px-3 py-1 text-black"
+        oninput="filterAnime()"
+      />
     </div>
+  </nav>
 
+  <!-- Mobile Search -->
+  <div class="sm:hidden p-4 bg-red-700">
+    <input
+      id="searchInputMobile"
+      type="text"
+      placeholder="Search anime..."
+      class="w-full rounded px-3 py-2 text-black"
+      oninput="filterAnime()"
+    />
   </div>
 
-</body>
-</html>
+  <!-- Main Content -->
+  <main class="flex-grow p-6 max-w-7xl mx-auto">
+
+    <h1 class="text-5xl font-extrabold mb-10 text-red-600 select-none">Featured Anime</h1>
+
+    <div
+      id="animeGrid"
+      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+    >
+      <!-- Anime cards inserted here by JS -->
+    </div>
+
+    <!-- Video Player Modal -->
+    <div
+      id="videoModal"
+      class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 hidden z-50"
+    >
+      <div class="relative w-full max-w-4xl">
+        <button
+          onclick="closeModal()"
+          class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-600"
+          aria-label="Close video"
+        >
+          &times;
+        </button>
+        <div class="aspect-w-16">
+          <iframe
+            id="videoFrame"
+            src=""
+            frameborder="0"
+            allowfullscreen
+            allow="autoplay; fullscreen"
+          ></iframe>
+        </div>
+        <h2
+          id="videoTitle"
+          class="text-white text-2xl font-semibold mt-4 select-none"
+        ></h2>
+        <p id="videoDescription" class="text-gray-300 mt-1"></p>
+      </div>
+    </div>
+  </main>
+
+  <!-- Footer -->
+  <footer class="bg-red-700 text-white text-center py-4 select-none">
+    &copy; 2025 Animepade. All rights reserved.
+  </footer>
+
+  <script>
+    const animeList = [
+      {
+        id: 1,
+        title: "Naruto",
+        image: "https://cdn.myanimelist.net/images/anime/13/17405.jpg",
+        description: "A young ninja's journey to become Hokage.",
+        videoUrl: "https://www.youtube.com/embed/8Q0Q9GBg-hI",
+      },
+      {
+        id: 2,
+        title: "Attack on Titan",
+        image: "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
+        description: "Humans fight against giant Titans.",
+        videoUrl: "https://www.youtube.com/embed/MGRm4IzK1SQ",
+      },
+      {
+        id: 3,
+        title: "My Hero Academia",
+        image: "https://cdn.myanimelist.net/images/anime/10/78745.jpg",
+        description: "A world where almost everyone has superpowers.",
+        videoUrl: "https://www.youtube.com/embed/JPJ4Z7h1cR0",
+      },
+      {
+        id: 4,
+        title: "Demon Slayer",
+        image: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
+        description: "A boy battles demons to save his sister.",
+        videoUrl: "https://www.youtube.com/embed/VQGCKyvzIM4",
+      },
+      {
+        id: 5,
+        title: "One Piece",
+        image: "https://cdn.myanimelist.net/images/anime/6/73245.jpg",
+        description: "Pirate adventures in search of the ultimate treasure.",
+        videoUrl: "https://www.youtube.com/embed/4K3D30mZQIw",
+      },
+      {
+        id: 6,
+        title: "Fullmetal Alchemist: Brotherhood",
+        image: "https://cdn.myanimelist.net/images/anime/1223/96541.jpg",
+        description: "Two brothers seek the Philosopher’s Stone.",
+        videoUrl: "https://www.youtube.com/embed/d3C3v4xFZ7o",
+      },
+    ];
+
+    const animeGrid = document.getElementById("animeGrid");
+    const videoModal = document.getElementById("videoModal");
+    const videoFrame = document.getElementById("videoFrame");
+    const videoTitle = document.getElementById("videoTitle");
+    const videoDescription = document.getElementById("videoDescription");
+
+    // Render anime cards
+    function renderAnimeList(list) {
+      animeGrid.innerHTML = "";
+      if (list.length === 0) {
+        animeGrid.innerHTML =
+          '<p class="text-center col-span-full text-gray-400 mt-12 text-xl select-none">No anime found.</p>';
+        return;
+      }
+      list.forEach((anime) => {
+        const card = document.createElement("div");
+        card.className =
+          "bg-gray-900 rounded shadow-lg overflow-hidden cursor-pointer hover:shadow-red-700 hover:scale-105 transition transform duration-300";
+        card.innerHTML = `
+          <img src="${anime.image}" alt="${anime.title}" class="w-full h-56 object-cover" />
+          <div class="p-4">
+            <h3 class="text-xl font-semibold mb-2">${anime.title}</h3>
+            <p class="text-gray-400 text-sm line-clamp-3">${anime.description}</p>
+          </div>
+        `;
+        card.onclick = () => openModal(anime);
+        animeGrid.appendChild(card);
