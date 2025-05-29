@@ -178,3 +178,36 @@
         `;
         card.onclick = () => openModal(anime);
         animeGrid.appendChild(card);
+      });
+    }
+
+    function openModal(anime) {
+      videoFrame.src = anime.videoUrl + "?autoplay=1";
+      videoTitle.textContent = anime.title;
+      videoDescription.textContent = anime.description;
+      videoModal.classList.remove("hidden");
+      document.body.style.overflow = "hidden"; // prevent background scroll
+    }
+
+    function closeModal() {
+      videoModal.classList.add("hidden");
+      videoFrame.src = "";
+      document.body.style.overflow = "auto";
+    }
+
+    function filterAnime() {
+      const query =
+        document.getElementById("searchInput").value.toLowerCase() ||
+        document.getElementById("searchInputMobile").value.toLowerCase();
+      const filtered = animeList.filter((anime) =>
+        anime.title.toLowerCase().includes(query)
+      );
+      renderAnimeList(filtered);
+    }
+
+    // Initial render
+    renderAnimeList(animeList);
+  </script>
+
+</body>
+</html>
