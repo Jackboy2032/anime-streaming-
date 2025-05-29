@@ -245,6 +245,36 @@
     toggleModal();
   }
   </script>
+  <script>
+  async function fetchAnime(query = "naruto") {
+    const res = await fetch(`https://api.jikan.moe/v4/anime?q=${query}&limit=8`);
+    const data = await res.json();
+    showAnime(data.data);
+  }
+
+  function showAnime(animeList) {
+    const container = document.getElementById("animeList");
+    container.innerHTML = "";
+
+    animeList.forEach(anime => {
+      const card = `
+        <div class="bg-gray-900 text-white rounded-lg overflow-hidden shadow-md">
+          <img src="${anime.images.jpg.image_url}" class="w-full h-48 object-cover" alt="${anime.title}">
+          <div class="p-4">
+            <h3 class="text-lg font-bold">${anime.title}</h3>
+            <p class="text-sm">${anime.synopsis ? anime.synopsis.slice(0, 100) + "..." : "No description"}</p>
+          </div>
+        </div>
+      `;
+      container.innerHTML += card;
+    });
+  }
+
+  // Load default anime on page load
+  document.addEventListener("DOMContentLoaded", () => {
+    fetchAnime();
+  });
+  </script>
 
 </body>
 </html>
