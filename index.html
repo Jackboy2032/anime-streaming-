@@ -220,6 +220,31 @@
     // Initial render
     renderAnimeList(animeList);
   </script>
+  <script>
+  let isSignup = false;
+
+  function toggleModal() {
+    const modal = document.getElementById('authModal');
+    modal.classList.toggle('hidden');
+  }
+
+  function toggleAuth() {
+    isSignup = !isSignup;
+    document.getElementById('modalTitle').textContent = isSignup ? 'Sign Up' : 'Login';
+    document.getElementById('toggleText').textContent = isSignup
+      ? 'Already have an account?'
+      : "Don't have an account?";
+    event.target.textContent = isSignup ? 'Login' : 'Sign up';
+  }
+
+  function handleAuth(event) {
+    event.preventDefault();
+    const email = document.getElementById('email').value;
+    localStorage.setItem('animepadeUser', email);
+    alert(`${isSignup ? 'Signed up' : 'Logged in'} as ${email}`);
+    toggleModal();
+  }
+  </script>
 
 </body>
 </html>
