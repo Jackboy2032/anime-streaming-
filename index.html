@@ -21,8 +21,13 @@
     </div>
   </nav>
 
-  <!-- Login Button -->
-  <div class="text-right p-4">
+  <!-- Top Right Controls -->
+  <div class="text-right p-4 flex justify-end items-center gap-4">
+    <!-- Theme Toggle Button -->
+    <button onclick="toggleTheme()" class="bg-gray-800 text-white px-3 py-2 rounded">
+      🌙 / ☀️
+    </button>
+    <!-- Login Button -->
     <button onclick="toggleModal()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Login / Signup</button>
   </div>
 
@@ -136,7 +141,7 @@
 
     document.addEventListener("DOMContentLoaded", () => {
       renderAnimeList(animeList);
-      fetchAnime(); // fetch trending
+      fetchAnime();
     });
   </script>
 
@@ -185,6 +190,33 @@
         container.innerHTML += card;
       });
     }
+  </script>
+
+  <!-- Theme Toggle Script -->
+  <script>
+    function toggleTheme() {
+      const body = document.getElementById("body");
+      const isDark = body.classList.contains("bg-black");
+      if (isDark) {
+        body.classList.remove("bg-black", "text-white");
+        body.classList.add("bg-white", "text-black");
+        localStorage.setItem("theme", "light");
+      } else {
+        body.classList.remove("bg-white", "text-black");
+        body.classList.add("bg-black", "text-white");
+        localStorage.setItem("theme", "dark");
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      const theme = localStorage.getItem("theme") || "dark";
+      const body = document.getElementById("body");
+      if (theme === "dark") {
+        body.classList.add("bg-black", "text-white");
+      } else {
+        body.classList.add("bg-white", "text-black");
+      }
+    });
   </script>
 </body>
   </html>
