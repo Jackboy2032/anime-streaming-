@@ -1,0 +1,33 @@
+<!-- signup.html -->
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Sign Up - Animepade</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  </head>
+  <body class="bg-black text-white flex items-center justify-center min-h-screen">
+    <div class="bg-gray-900 p-6 rounded-lg w-full max-w-sm shadow-lg">
+      <h1 class="text-2xl font-bold text-red-500 mb-4 text-center">Join Animepade</h1>
+
+      <form>
+        <label class="block mb-2">Email</label>
+        <input type="email" placeholder="you@example.com" class="w-full p-2 rounded bg-gray-800 text-white mb-4 focus:outline-none" required />
+
+        <label class="block mb-2">Password</label>
+        <input type="password" placeholder="Create a password" class="w-full p-2 rounded bg-gray-800 text-white mb-4 focus:outline-none" required />
+
+        <label class="block mb-2">Confirm Password</label>
+        <input type="password" placeholder="Repeat password" class="w-full p-2 rounded bg-gray-800 text-white mb-4 focus:outline-none" required />
+
+        <button type="submit" class="bg-red-600 hover:bg-red-700 w-full p-2 rounded mt-2 font-bold">Sign Up</button>
+      </form>
+
+      <p class="mt-4 text-sm text-center">
+        Already have an account?
+        <a href="login.html" class="text-red-400 hover:underline">Log In</a>
+      </p>
+    </div>
+  </body>
+</html>
