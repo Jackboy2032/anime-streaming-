@@ -2,285 +2,189 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Animepade</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
 </head>
 <body class="bg-black text-white min-h-screen flex flex-col">
-  <section class="p-4">
-  <h2 class="text-2xl font-bold text-red-500 mb-4">🔥 Trending Anime</h2>
-  <div id="animeList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
-    <!-- Anime cards go here -->
-  </div>
-  </section>
-
   <!-- Navbar -->
   <nav class="bg-red-700 px-6 py-4 flex items-center justify-between">
-    <div class="text-2xl font-extrabold tracking-wide cursor-pointer select-none text-white">
-      Animepade
-    </div>
+    <div class="text-2xl font-extrabold text-white">Animepade</div>
     <div class="hidden sm:flex space-x-6 text-white font-semibold">
-      <a href="#" class="hover:text-gray-300 transition">Home</a>
-      <a href="#" class="hover:text-gray-300 transition">Anime</a>
-      <a href="#" class="hover:text-gray-300 transition">Movies</a>
-      <a href="#" class="hover:text-gray-300 transition">My List</a>
+      <a href="#" class="hover:text-gray-300">Home</a>
+      <a href="#" class="hover:text-gray-300">Anime</a>
+      <a href="#" class="hover:text-gray-300">Movies</a>
+      <a href="#" class="hover:text-gray-300">My List</a>
     </div>
     <div class="sm:block hidden">
-      <input
-        id="searchInput"
-        type="text"
-        placeholder="Search anime..."
-        class="rounded px-3 py-1 text-black"
-        oninput="filterAnime()"
-      />
+      <input id="searchInput" type="text" placeholder="Search anime..." class="rounded px-3 py-1 text-black" oninput="filterAnime()"/>
     </div>
   </nav>
-  <!-- Login/Signup Button -->
-<div class="text-right p-4">
-  <button onclick="toggleModal()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">
-    Login / Signup
-  </button>
-</div>
 
-<!-- Modal Background -->
-<div id="authModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
-  <!-- Modal Box -->
-  <div class="bg-white text-black w-11/12 sm:w-96 rounded-lg p-6 relative">
-    <!-- Close Button -->
-    <button onclick="toggleModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
-
-    <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-center">Login</h2>
-    
-    <form onsubmit="handleAuth(event)" class="space-y-4">
-      <input type="email" id="email" required placeholder="Email" class="w-full border border-gray-300 p-2 rounded">
-      <input type="password" id="password" required placeholder="Password" class="w-full border border-gray-300 p-2 rounded">
-      <button type="submit" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">Submit</button>
-    </form>
-
-    <p class="text-center mt-4 text-sm">
-      <span id="toggleText">Don't have an account?</span>
-      <button onclick="toggleAuth()" class="text-red-600 underline ml-1">Sign up</button>
-    </p>
+  <!-- Login Button -->
+  <div class="text-right p-4">
+    <button onclick="toggleModal()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Login / Signup</button>
   </div>
-</div>
+
+  <!-- Auth Modal -->
+  <div id="authModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
+    <div class="bg-white text-black w-11/12 sm:w-96 rounded-lg p-6 relative">
+      <button onclick="toggleModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
+      <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-center">Login</h2>
+      <form onsubmit="handleAuth(event)" class="space-y-4">
+        <input type="email" id="email" required placeholder="Email" class="w-full border p-2 rounded">
+        <input type="password" id="password" required placeholder="Password" class="w-full border p-2 rounded">
+        <button type="submit" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">Submit</button>
+      </form>
+      <p class="text-center mt-4 text-sm">
+        <span id="toggleText">Don't have an account?</span>
+        <button onclick="toggleAuth()" class="text-red-600 underline ml-1">Sign up</button>
+      </p>
+    </div>
+  </div>
 
   <!-- Mobile Search -->
   <div class="sm:hidden p-4 bg-red-700">
-    <input
-      id="searchInputMobile"
-      type="text"
-      placeholder="Search anime..."
-      class="w-full rounded px-3 py-2 text-black"
-      oninput="filterAnime()"
-    />
+    <input id="searchInputMobile" type="text" placeholder="Search anime..." class="w-full rounded px-3 py-2 text-black" oninput="filterAnime()"/>
   </div>
 
-  <!-- Main Content -->
+  <!-- Featured Section -->
   <main class="flex-grow p-6 max-w-7xl mx-auto">
-
-    <h1 class="text-5xl font-extrabold mb-10 text-red-600 select-none">Featured Anime</h1>
-
-    <div
-      id="animeGrid"
-      class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-    >
-      <!-- Anime cards inserted here by JS -->
-    </div>
-
-    <!-- Video Player Modal -->
-    <div
-      id="videoModal"
-      class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 hidden z-50"
-    >
-      <div class="relative w-full max-w-4xl">
-        <button
-          onclick="closeModal()"
-          class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-600"
-          aria-label="Close video"
-        >
-          &times;
-        </button>
-        <div class="aspect-w-16">
-          <iframe
-            id="videoFrame"
-            src=""
-            frameborder="0"
-            allowfullscreen
-            allow="autoplay; fullscreen"
-          ></iframe>
-        </div>
-        <h2
-          id="videoTitle"
-          class="text-white text-2xl font-semibold mt-4 select-none"
-        ></h2>
-        <p id="videoDescription" class="text-gray-300 mt-1"></p>
-      </div>
-    </div>
+    <h1 class="text-4xl font-extrabold mb-6 text-red-600">🔥 Trending Anime</h1>
+    <div id="animeList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+    <h1 class="text-3xl font-bold mt-12 mb-6 text-red-500">Featured Anime</h1>
+    <div id="animeGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
   </main>
 
+  <!-- Video Modal -->
+  <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 hidden z-50">
+    <div class="relative w-full max-w-4xl">
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-600">&times;</button>
+      <div class="aspect-w-16">
+        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+      </div>
+      <h2 id="videoTitle" class="text-white text-2xl font-semibold mt-4"></h2>
+      <p id="videoDescription" class="text-gray-300 mt-1"></p>
+    </div>
+  </div>
+
   <!-- Footer -->
-  <footer class="bg-red-700 text-white text-center py-4 select-none">
+  <footer class="bg-red-700 text-white text-center py-4">
     &copy; 2025 Animepade. All rights reserved.
   </footer>
 
+  <!-- Scripts -->
   <script>
     const animeList = [
       {
-        id: 1,
         title: "Naruto",
         image: "https://cdn.myanimelist.net/images/anime/13/17405.jpg",
         description: "A young ninja's journey to become Hokage.",
-        videoUrl: "https://www.youtube.com/embed/8Q0Q9GBg-hI",
+        videoUrl: "https://www.youtube.com/embed/8Q0Q9GBg-hI"
       },
       {
-        id: 2,
         title: "Attack on Titan",
         image: "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
         description: "Humans fight against giant Titans.",
-        videoUrl: "https://www.youtube.com/embed/MGRm4IzK1SQ",
+        videoUrl: "https://www.youtube.com/embed/MGRm4IzK1SQ"
       },
       {
-        id: 3,
-        title: "My Hero Academia",
-        image: "https://cdn.myanimelist.net/images/anime/10/78745.jpg",
-        description: "A world where almost everyone has superpowers.",
-        videoUrl: "https://www.youtube.com/embed/JPJ4Z7h1cR0",
-      },
-      {
-        id: 4,
         title: "Demon Slayer",
         image: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
         description: "A boy battles demons to save his sister.",
-        videoUrl: "https://www.youtube.com/embed/VQGCKyvzIM4",
-      },
-      {
-        id: 5,
-        title: "One Piece",
-        image: "https://cdn.myanimelist.net/images/anime/6/73245.jpg",
-        description: "Pirate adventures in search of the ultimate treasure.",
-        videoUrl: "https://www.youtube.com/embed/4K3D30mZQIw",
-      },
-      {
-        id: 6,
-        title: "Fullmetal Alchemist: Brotherhood",
-        image: "https://cdn.myanimelist.net/images/anime/1223/96541.jpg",
-        description: "Two brothers seek the Philosopher’s Stone.",
-        videoUrl: "https://www.youtube.com/embed/d3C3v4xFZ7o",
-      },
+        videoUrl: "https://www.youtube.com/embed/VQGCKyvzIM4"
+      }
     ];
 
-    const animeGrid = document.getElementById("animeGrid");
-    const videoModal = document.getElementById("videoModal");
-    const videoFrame = document.getElementById("videoFrame");
-    const videoTitle = document.getElementById("videoTitle");
-    const videoDescription = document.getElementById("videoDescription");
-
-    // Render anime cards
     function renderAnimeList(list) {
-      animeGrid.innerHTML = "";
-      if (list.length === 0) {
-        animeGrid.innerHTML =
-          '<p class="text-center col-span-full text-gray-400 mt-12 text-xl select-none">No anime found.</p>';
-        return;
-      }
-      list.forEach((anime) => {
+      const grid = document.getElementById("animeGrid");
+      grid.innerHTML = "";
+      list.forEach(anime => {
         const card = document.createElement("div");
-        card.className =
-          "bg-gray-900 rounded shadow-lg overflow-hidden cursor-pointer hover:shadow-red-700 hover:scale-105 transition transform duration-300";
+        card.className = "bg-gray-900 rounded shadow-lg overflow-hidden cursor-pointer hover:shadow-red-700 hover:scale-105 transition";
         card.innerHTML = `
-          <img src="${anime.image}" alt="${anime.title}" class="w-full h-56 object-cover" />
+          <img src="${anime.image}" class="w-full h-56 object-cover"/>
           <div class="p-4">
             <h3 class="text-xl font-semibold mb-2">${anime.title}</h3>
-            <p class="text-gray-400 text-sm line-clamp-3">${anime.description}</p>
+            <p class="text-gray-400 text-sm">${anime.description}</p>
           </div>
         `;
         card.onclick = () => openModal(anime);
-        animeGrid.appendChild(card);
+        grid.appendChild(card);
       });
     }
 
     function openModal(anime) {
-      videoFrame.src = anime.videoUrl + "?autoplay=1";
-      videoTitle.textContent = anime.title;
-      videoDescription.textContent = anime.description;
-      videoModal.classList.remove("hidden");
-      document.body.style.overflow = "hidden"; // prevent background scroll
+      document.getElementById("videoFrame").src = anime.videoUrl + "?autoplay=1";
+      document.getElementById("videoTitle").textContent = anime.title;
+      document.getElementById("videoDescription").textContent = anime.description;
+      document.getElementById("videoModal").classList.remove("hidden");
+      document.body.style.overflow = "hidden";
     }
 
     function closeModal() {
-      videoModal.classList.add("hidden");
-      videoFrame.src = "";
+      document.getElementById("videoModal").classList.add("hidden");
+      document.getElementById("videoFrame").src = "";
       document.body.style.overflow = "auto";
     }
 
     function filterAnime() {
-      const query =
-        document.getElementById("searchInput").value.toLowerCase() ||
-        document.getElementById("searchInputMobile").value.toLowerCase();
-      const filtered = animeList.filter((anime) =>
-        anime.title.toLowerCase().includes(query)
-      );
+      const query = (document.getElementById("searchInput").value || document.getElementById("searchInputMobile").value || "").toLowerCase();
+      const filtered = animeList.filter(anime => anime.title.toLowerCase().includes(query));
       renderAnimeList(filtered);
     }
 
-    // Initial render
-    renderAnimeList(animeList);
-  </script>
-  <script>
-  let isSignup = false;
-
-  function toggleModal() {
-    const modal = document.getElementById('authModal');
-    modal.classList.toggle('hidden');
-  }
-
-  function toggleAuth() {
-    isSignup = !isSignup;
-    document.getElementById('modalTitle').textContent = isSignup ? 'Sign Up' : 'Login';
-    document.getElementById('toggleText').textContent = isSignup
-      ? 'Already have an account?'
-      : "Don't have an account?";
-    event.target.textContent = isSignup ? 'Login' : 'Sign up';
-  }
-
-  function handleAuth(event) {
-    event.preventDefault();
-    const email = document.getElementById('email').value;
-    localStorage.setItem('animepadeUser', email);
-    alert(`${isSignup ? 'Signed up' : 'Logged in'} as ${email}`);
-    toggleModal();
-  }
-  </script>
-  <script>
-  async function fetchAnime(query = "naruto") {
-    const res = await fetch(`https://api.jikan.moe/v4/anime?q=${query}&limit=8`);
-    const data = await res.json();
-    showAnime(data.data);
-  }
-
-  function showAnime(animeList) {
-    const container = document.getElementById("animeList");
-    container.innerHTML = "";
-
-    animeList.forEach(anime => {
-      const card = `
-        <div class="bg-gray-900 text-white rounded-lg overflow-hidden shadow-md">
-          <img src="${anime.images.jpg.image_url}" class="w-full h-48 object-cover" alt="${anime.title}">
-          <div class="p-4">
-            <h3 class="text-lg font-bold">${anime.title}</h3>
-            <p class="text-sm">${anime.synopsis ? anime.synopsis.slice(0, 100) + "..." : "No description"}</p>
-          </div>
-        </div>
-      `;
-      container.innerHTML += card;
+    document.addEventListener("DOMContentLoaded", () => {
+      renderAnimeList(animeList);
+      fetchAnime(); // fetch trending
     });
-  }
-
-  // Load default anime on page load
-  document.addEventListener("DOMContentLoaded", () => {
-    fetchAnime();
-  });
   </script>
 
+  <script>
+    let isSignup = false;
+    function toggleModal() {
+      document.getElementById('authModal').classList.toggle('hidden');
+    }
+
+    function toggleAuth() {
+      isSignup = !isSignup;
+      document.getElementById('modalTitle').textContent = isSignup ? 'Sign Up' : 'Login';
+      document.getElementById('toggleText').textContent = isSignup ? 'Already have an account?' : "Don't have an account?";
+      event.target.textContent = isSignup ? 'Login' : 'Sign up';
+    }
+
+    function handleAuth(event) {
+      event.preventDefault();
+      const email = document.getElementById('email').value;
+      localStorage.setItem('animepadeUser', email);
+      alert(`${isSignup ? 'Signed up' : 'Logged in'} as ${email}`);
+      toggleModal();
+    }
+  </script>
+
+  <script>
+    async function fetchAnime(query = "naruto") {
+      const res = await fetch(`https://api.jikan.moe/v4/anime?q=${query}&limit=6`);
+      const data = await res.json();
+      showTrending(data.data);
+    }
+
+    function showTrending(animeList) {
+      const container = document.getElementById("animeList");
+      container.innerHTML = "";
+      animeList.forEach(anime => {
+        const card = `
+          <div class="bg-gray-900 text-white rounded-lg overflow-hidden shadow-md">
+            <img src="${anime.images.jpg.image_url}" class="w-full h-48 object-cover" alt="${anime.title}">
+            <div class="p-4">
+              <h3 class="text-lg font-bold">${anime.title}</h3>
+              <p class="text-sm">${anime.synopsis ? anime.synopsis.slice(0, 100) + "..." : "No description"}</p>
+            </div>
+          </div>
+        `;
+        container.innerHTML += card;
+      });
+    }
+  </script>
 </body>
-</html>
+  </html>
