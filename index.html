@@ -2,33 +2,41 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Animepade</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ToonnaKage</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
+  <style>
+    body.light-mode {
+      background-color: white;
+      color: black;
+    }
+    body.light-mode .bg-gray-900 {
+      background-color: #f3f3f3;
+    }
+    body.light-mode .text-white {
+      color: black;
+    }
+  </style>
 </head>
-<body id="body" class="min-h-screen flex flex-col transition duration-300 ease-in-out">
+<body class="bg-black text-white min-h-screen flex flex-col">
   <!-- Navbar -->
-  <nav class="bg-red-700 px-6 py-4 flex items-center justify-between">
-    <div class="text-2xl font-extrabold text-white">Animepade</div>
+  <nav class="bg-orange-700 px-6 py-4 flex items-center justify-between">
+    <div class="text-2xl font-extrabold text-white">ToonnaKage</div>
     <div class="hidden sm:flex space-x-6 text-white font-semibold">
       <a href="#" class="hover:text-gray-300">Home</a>
       <a href="#" class="hover:text-gray-300">Anime</a>
       <a href="#" class="hover:text-gray-300">Movies</a>
       <a href="#" class="hover:text-gray-300">My List</a>
     </div>
-    <div class="sm:block hidden">
-      <input id="searchInput" type="text" placeholder="Search anime..." class="rounded px-3 py-1 text-black" oninput="filterAnime()"/>
+    <div class="sm:flex items-center gap-2 hidden">
+      <input id="searchInput" type="text" placeholder="Search anime..." class="rounded px-3 py-1 text-black" oninput="filterAnime()" />
+      <button onclick="toggleTheme()" class="bg-black text-white px-2 py-1 rounded hover:bg-gray-800 text-sm">Toggle Mode</button>
     </div>
   </nav>
 
-  <!-- Top Right Controls -->
-  <div class="text-right p-4 flex justify-end items-center gap-4">
-    <!-- Theme Toggle Button -->
-    <button onclick="toggleTheme()" class="bg-gray-800 text-white px-3 py-2 rounded">
-      🌙 / ☀️
-    </button>
-    <!-- Login Button -->
-    <button onclick="toggleModal()" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Login / Signup</button>
+  <!-- Login Button -->
+  <div class="text-right p-4">
+    <button onclick="toggleModal()" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">Login / Signup</button>
   </div>
 
   <!-- Auth Modal -->
@@ -37,36 +45,51 @@
       <button onclick="toggleModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
       <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-center">Login</h2>
       <form onsubmit="handleAuth(event)" class="space-y-4">
-        <input type="email" id="email" required placeholder="Email" class="w-full border p-2 rounded">
-        <input type="password" id="password" required placeholder="Password" class="w-full border p-2 rounded">
-        <button type="submit" class="w-full bg-red-600 text-white py-2 rounded hover:bg-red-700">Submit</button>
+        <input type="email" id="email" required placeholder="Email" class="w-full border p-2 rounded" />
+        <input type="password" id="password" required placeholder="Password" class="w-full border p-2 rounded" />
+        <button type="submit" class="w-full bg-orange-600 text-white py-2 rounded hover:bg-orange-700">Submit</button>
       </form>
       <p class="text-center mt-4 text-sm">
         <span id="toggleText">Don't have an account?</span>
-        <button onclick="toggleAuth()" class="text-red-600 underline ml-1">Sign up</button>
+        <button onclick="toggleAuth()" class="text-orange-600 underline ml-1">Sign up</button>
       </p>
     </div>
   </div>
 
   <!-- Mobile Search -->
-  <div class="sm:hidden p-4 bg-red-700">
-    <input id="searchInputMobile" type="text" placeholder="Search anime..." class="w-full rounded px-3 py-2 text-black" oninput="filterAnime()"/>
+  <div class="sm:hidden p-4 bg-orange-700 flex items-center gap-2">
+    <input
+      id="searchInputMobile"
+      type="text"
+      placeholder="Search anime..."
+      class="w-full rounded px-3 py-2 text-black"
+      oninput="filterAnime()"
+    />
+    <button onclick="toggleTheme()" class="bg-black text-white px-2 py-1 rounded hover:bg-gray-800 text-sm">🌓</button>
   </div>
 
   <!-- Featured Section -->
   <main class="flex-grow p-6 max-w-7xl mx-auto">
-    <h1 class="text-4xl font-extrabold mb-6 text-red-600">🔥 Trending Anime</h1>
+    <h1 class="text-4xl font-extrabold mb-6 text-orange-600">🔥 Trending Anime</h1>
     <div id="animeList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
-    <h1 class="text-3xl font-bold mt-12 mb-6 text-red-500">Featured Anime</h1>
+
+    <h1 class="text-3xl font-bold mt-12 mb-6 text-orange-500">Featured Anime</h1>
     <div id="animeGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
   </main>
 
   <!-- Video Modal -->
   <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 hidden z-50">
     <div class="relative w-full max-w-4xl">
-      <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-red-600">&times;</button>
-      <div class="aspect-w-16">
-        <iframe id="videoFrame" src="" frameborder="0" allowfullscreen allow="autoplay; fullscreen"></iframe>
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-orange-600">&times;</button>
+      <div class="aspect-w-16 aspect-h-9">
+        <iframe
+          id="videoFrame"
+          src=""
+          frameborder="0"
+          allowfullscreen
+          allow="autoplay; fullscreen"
+          class="w-full h-full"
+        ></iframe>
       </div>
       <h2 id="videoTitle" class="text-white text-2xl font-semibold mt-4"></h2>
       <p id="videoDescription" class="text-gray-300 mt-1"></p>
@@ -74,8 +97,8 @@
   </div>
 
   <!-- Footer -->
-  <footer class="bg-red-700 text-white text-center py-4">
-    &copy; 2025 Animepade. All rights reserved.
+  <footer class="bg-orange-700 text-white text-center py-4">
+    &copy; 2025 ToonnaKage. All rights reserved.
   </footer>
 
   <!-- Scripts -->
@@ -85,33 +108,35 @@
         title: "Naruto",
         image: "https://cdn.myanimelist.net/images/anime/13/17405.jpg",
         description: "A young ninja's journey to become Hokage.",
-        videoUrl: "https://www.youtube.com/embed/8Q0Q9GBg-hI"
+        videoUrl: "https://www.youtube.com/embed/8Q0Q9GBg-hI",
       },
       {
         title: "Attack on Titan",
         image: "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
         description: "Humans fight against giant Titans.",
-        videoUrl: "https://www.youtube.com/embed/MGRm4IzK1SQ"
+        videoUrl: "https://www.youtube.com/embed/MGRm4IzK1SQ",
       },
       {
         title: "Demon Slayer",
         image: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
         description: "A boy battles demons to save his sister.",
-        videoUrl: "https://www.youtube.com/embed/VQGCKyvzIM4"
-      }
+        videoUrl: "https://www.youtube.com/embed/VQGCKyvzIM4",
+      },
     ];
 
     function renderAnimeList(list) {
       const grid = document.getElementById("animeGrid");
       grid.innerHTML = "";
-      list.forEach(anime => {
+      list.forEach((anime) => {
         const card = document.createElement("div");
-        card.className = "bg-gray-900 rounded shadow-lg overflow-hidden cursor-pointer hover:shadow-red-700 hover:scale-105 transition";
+        card.className =
+          "bg-gray-900 rounded shadow-lg overflow-hidden cursor-pointer hover:shadow-orange-700 hover:scale-105 transition";
         card.innerHTML = `
           <img src="${anime.image}" class="w-full h-56 object-cover"/>
           <div class="p-4">
             <h3 class="text-xl font-semibold mb-2">${anime.title}</h3>
             <p class="text-gray-400 text-sm">${anime.description}</p>
+            <button onclick="toggleWatchlist('${anime.title}')" class="mt-2 px-3 py-1 bg-orange-600 text-white rounded text-xs">Add to Watchlist</button>
           </div>
         `;
         card.onclick = () => openModal(anime);
@@ -134,40 +159,65 @@
     }
 
     function filterAnime() {
-      const query = (document.getElementById("searchInput").value || document.getElementById("searchInputMobile").value || "").toLowerCase();
-      const filtered = animeList.filter(anime => anime.title.toLowerCase().includes(query));
+      const query =
+        (document.getElementById("searchInput").value ||
+          document.getElementById("searchInputMobile").value ||
+          ""
+        ).toLowerCase();
+      const filtered = animeList.filter((anime) =>
+        anime.title.toLowerCase().includes(query)
+      );
       renderAnimeList(filtered);
+      addToSearchHistory(query);
     }
 
-    document.addEventListener("DOMContentLoaded", () => {
-      renderAnimeList(animeList);
-      fetchAnime();
-    });
-  </script>
-
-  <script>
-    let isSignup = false;
     function toggleModal() {
-      document.getElementById('authModal').classList.toggle('hidden');
+      document.getElementById("authModal").classList.toggle("hidden");
     }
 
+    let isSignup = false;
     function toggleAuth() {
       isSignup = !isSignup;
-      document.getElementById('modalTitle').textContent = isSignup ? 'Sign Up' : 'Login';
-      document.getElementById('toggleText').textContent = isSignup ? 'Already have an account?' : "Don't have an account?";
-      event.target.textContent = isSignup ? 'Login' : 'Sign up';
+      document.getElementById("modalTitle").textContent = isSignup ? "Sign Up" : "Login";
+      document.getElementById("toggleText").textContent = isSignup
+        ? "Already have an account?"
+        : "Don't have an account?";
+      event.target.textContent = isSignup ? "Login" : "Sign up";
     }
 
     function handleAuth(event) {
       event.preventDefault();
-      const email = document.getElementById('email').value;
-      localStorage.setItem('animepadeUser', email);
-      alert(`${isSignup ? 'Signed up' : 'Logged in'} as ${email}`);
+      const email = document.getElementById("email").value;
+      localStorage.setItem("toonnakageUser", email);
+      alert(`${isSignup ? "Signed up" : "Logged in"} as ${email}`);
       toggleModal();
     }
-  </script>
 
-  <script>
+    function toggleTheme() {
+      document.body.classList.toggle("light-mode");
+    }
+
+    function toggleWatchlist(title) {
+      let list = JSON.parse(localStorage.getItem("watchlist")) || [];
+      if (!list.includes(title)) {
+        list.push(title);
+      } else {
+        list = list.filter((item) => item !== title);
+      }
+      localStorage.setItem("watchlist", JSON.stringify(list));
+      alert(`Watchlist updated: ${list.join(", ")}`);
+    }
+
+    function addToSearchHistory(query) {
+      if (!query) return;
+      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
+      if (!history.includes(query)) {
+        history.unshift(query);
+        if (history.length > 10) history.pop();
+        localStorage.setItem("searchHistory", JSON.stringify(history));
+      }
+    }
+
     async function fetchAnime(query = "naruto") {
       const res = await fetch(`https://api.jikan.moe/v4/anime?q=${query}&limit=6`);
       const data = await res.json();
@@ -177,10 +227,10 @@
     function showTrending(animeList) {
       const container = document.getElementById("animeList");
       container.innerHTML = "";
-      animeList.forEach(anime => {
+      animeList.forEach((anime) => {
         const card = `
-          <div class="bg-gray-900 text-white rounded-lg overflow-hidden shadow-md">
-            <img src="${anime.images.jpg.image_url}" class="w-full h-48 object-cover" alt="${anime.title}">
+          <div class="bg-gray-900 text-white rounded-lg overflow-hidden shadow-md cursor-pointer" onclick='openModal({title: "${anime.title.replace(/"/g, '\\"')}", image: "${anime.images.jpg.image_url}", description: "${(anime.synopsis || "").replace(/"/g, '\\"')}", videoUrl: ""})'>
+            <img src="${anime.images.jpg.image_url}" class="w-full h-48 object-cover" alt="${anime.title}" />
             <div class="p-4">
               <h3 class="text-lg font-bold">${anime.title}</h3>
               <p class="text-sm">${anime.synopsis ? anime.synopsis.slice(0, 100) + "..." : "No description"}</p>
@@ -190,33 +240,11 @@
         container.innerHTML += card;
       });
     }
-  </script>
-
-  <!-- Theme Toggle Script -->
-  <script>
-    function toggleTheme() {
-      const body = document.getElementById("body");
-      const isDark = body.classList.contains("bg-black");
-      if (isDark) {
-        body.classList.remove("bg-black", "text-white");
-        body.classList.add("bg-white", "text-black");
-        localStorage.setItem("theme", "light");
-      } else {
-        body.classList.remove("bg-white", "text-black");
-        body.classList.add("bg-black", "text-white");
-        localStorage.setItem("theme", "dark");
-      }
-    }
 
     document.addEventListener("DOMContentLoaded", () => {
-      const theme = localStorage.getItem("theme") || "dark";
-      const body = document.getElementById("body");
-      if (theme === "dark") {
-        body.classList.add("bg-black", "text-white");
-      } else {
-        body.classList.add("bg-white", "text-black");
-      }
+      renderAnimeList(animeList);
+      fetchAnime();
     });
   </script>
 </body>
-  </html>
+          </html>
