@@ -1,87 +1,160 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="scroll-smooth">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
   <title>ToonnaKage</title>
   <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet" />
   <style>
+    /* Custom scrollbar */
+    ::-webkit-scrollbar {
+      width: 8px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #121212;
+    }
+    ::-webkit-scrollbar-thumb {
+      background-color: #E50914;
+      border-radius: 4px;
+    }
+
     body.light-mode {
-      background-color: white;
-      color: black;
+      background-color: #f9f9f9;
+      color: #111;
     }
     body.light-mode .bg-gray-900 {
-      background-color: #f3f3f3;
+      background-color: #e5e5e5;
     }
     body.light-mode .text-white {
-      color: black;
+      color: #111;
     }
   </style>
 </head>
-<body class="bg-black text-white min-h-screen flex flex-col">
-  <!-- Navbar -->
-  <nav class="bg-orange-700 px-6 py-4 flex items-center justify-between">
-    <div class="text-2xl font-extrabold text-white">ToonnaKage</div>
-    <div class="hidden sm:flex space-x-6 text-white font-semibold">
-      <a href="#" class="hover:text-gray-300">Home</a>
-      <a href="#" class="hover:text-gray-300">Anime</a>
-      <a href="#" class="hover:text-gray-300">Movies</a>
-      <a href="#" class="hover:text-gray-300">My List</a>
-    </div>
-    <div class="sm:flex items-center gap-2 hidden">
-      <input id="searchInput" type="text" placeholder="Search anime..." class="rounded px-3 py-1 text-black" oninput="filterAnime()" />
-      <button onclick="toggleTheme()" class="bg-black text-white px-2 py-1 rounded hover:bg-gray-800 text-sm">Toggle Mode</button>
-    </div>
-  </nav>
+<body class="bg-black text-white min-h-screen flex">
 
-  <!-- Login Button -->
-  <div class="text-right p-4">
-    <button onclick="toggleModal()" class="bg-orange-600 text-white px-4 py-2 rounded hover:bg-orange-700">Login / Signup</button>
+  <!-- Sidebar -->
+  <aside class="fixed inset-y-0 left-0 w-64 bg-black border-r border-gray-800 flex flex-col z-30">
+    <div class="h-16 flex items-center justify-center border-b border-gray-800 font-extrabold text-2xl text-red-600 select-none">
+      ToonnaKage
+    </div>
+    <nav class="flex-grow mt-6">
+      <ul class="space-y-1 px-4">
+        <li>
+          <a href="#" class="block px-3 py-2 rounded hover:bg-red-700 font-semibold text-red-600">
+            Home
+          </a>
+        </li>
+        <li>
+          <a href="#" class="block px-3 py-2 rounded hover:bg-red-700">
+            Anime
+          </a>
+        </li>
+        <li>
+          <a href="#" class="block px-3 py-2 rounded hover:bg-red-700">
+            Movies
+          </a>
+        </li>
+        <li>
+          <a href="#" class="block px-3 py-2 rounded hover:bg-red-700">
+            My List
+          </a>
+        </li>
+      </ul>
+    </nav>
+    <div class="p-4 border-t border-gray-800">
+      <button onclick="toggleModal()" class="w-full bg-red-600 hover:bg-red-700 rounded py-2 font-semibold text-white">Login / Signup</button>
+    </div>
+  </aside>
+
+  <!-- Main Content Wrapper -->
+  <div class="flex flex-col flex-grow ml-64 min-h-screen">
+
+    <!-- Top Navbar -->
+    <header class="h-16 bg-black border-b border-gray-800 flex items-center justify-between px-6 fixed left-64 right-0 z-20">
+      <div class="flex items-center space-x-4">
+        <button onclick="toggleSidebar()" class="md:hidden text-red-600 focus:outline-none" aria-label="Toggle sidebar">
+          <svg class="w-6 h-6" fill="none" stroke="#E50914" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" viewBox="0 0 24 24">
+            <path d="M4 6h16M4 12h16M4 18h16"></path>
+          </svg>
+        </button>
+        <input
+          id="searchInput"
+          type="text"
+          placeholder="Search anime..."
+          class="hidden sm:block rounded bg-gray-900 px-3 py-1 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600"
+          oninput="filterAnime()"
+          autocomplete="off"
+        />
+      </div>
+
+      <div class="flex items-center space-x-4">
+        <button onclick="toggleTheme()" class="bg-red-600 hover:bg-red-700 rounded px-3 py-1 text-white text-sm select-none">
+          🌓
+        </button>
+      </div>
+    </header>
+
+    <!-- Mobile search -->
+    <div class="sm:hidden p-4 bg-black border-b border-gray-800">
+      <input
+        id="searchInputMobile"
+        type="text"
+        placeholder="Search anime..."
+        class="w-full rounded bg-gray-900 px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-red-600"
+        oninput="filterAnime()"
+        autocomplete="off"
+      />
+    </div>
+
+    <!-- Main page content -->
+    <main class="flex-grow p-6 pt-24 max-w-7xl mx-auto">
+      <h1 class="text-4xl font-extrabold mb-6 text-red-600 select-none">🔥 Trending Anime</h1>
+      <div id="animeList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
+
+      <h1 class="text-3xl font-bold mt-12 mb-6 text-red-500 select-none">Featured Anime</h1>
+      <div id="animeGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
+    </main>
+
+    <!-- Footer -->
+    <footer class="bg-black border-t border-gray-800 text-gray-400 text-center py-4 select-none">
+      &copy; 2025 ToonnaKage. All rights reserved.
+    </footer>
   </div>
 
   <!-- Auth Modal -->
-  <div id="authModal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center hidden z-50">
-    <div class="bg-white text-black w-11/12 sm:w-96 rounded-lg p-6 relative">
-      <button onclick="toggleModal()" class="absolute top-2 right-3 text-gray-500 hover:text-black text-xl">&times;</button>
-      <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-center">Login</h2>
+  <div id="authModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center hidden z-50">
+    <div class="bg-gray-900 text-white w-11/12 sm:w-96 rounded-lg p-6 relative border border-red-600">
+      <button onclick="toggleModal()" class="absolute top-2 right-3 text-red-600 hover:text-red-400 text-xl font-bold">&times;</button>
+      <h2 id="modalTitle" class="text-2xl font-bold mb-4 text-red-600 text-center">Login</h2>
       <form onsubmit="handleAuth(event)" class="space-y-4">
-        <input type="email" id="email" required placeholder="Email" class="w-full border p-2 rounded" />
-        <input type="password" id="password" required placeholder="Password" class="w-full border p-2 rounded" />
-        <button type="submit" class="w-full bg-orange-600 text-white py-2 rounded hover:bg-orange-700">Submit</button>
+        <input
+          type="email"
+          id="email"
+          required
+          placeholder="Email"
+          class="w-full rounded border border-gray-700 bg-black px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-red-600"
+        />
+        <input
+          type="password"
+          id="password"
+          required
+          placeholder="Password"
+          class="w-full rounded border border-gray-700 bg-black px-3 py-2 text-white placeholder-gray-500 focus:outline-none focus:border-red-600"
+        />
+        <button type="submit" class="w-full bg-red-600 hover:bg-red-700 rounded py-2 font-semibold">Submit</button>
       </form>
       <p class="text-center mt-4 text-sm">
         <span id="toggleText">Don't have an account?</span>
-        <button onclick="toggleAuth()" class="text-orange-600 underline ml-1">Sign up</button>
+        <button onclick="toggleAuth()" class="text-red-600 underline ml-1">Sign up</button>
       </p>
     </div>
   </div>
 
-  <!-- Mobile Search -->
-  <div class="sm:hidden p-4 bg-orange-700 flex items-center gap-2">
-    <input
-      id="searchInputMobile"
-      type="text"
-      placeholder="Search anime..."
-      class="w-full rounded px-3 py-2 text-black"
-      oninput="filterAnime()"
-    />
-    <button onclick="toggleTheme()" class="bg-black text-white px-2 py-1 rounded hover:bg-gray-800 text-sm">🌓</button>
-  </div>
-
-  <!-- Featured Section -->
-  <main class="flex-grow p-6 max-w-7xl mx-auto">
-    <h1 class="text-4xl font-extrabold mb-6 text-orange-600">🔥 Trending Anime</h1>
-    <div id="animeList" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4"></div>
-
-    <h1 class="text-3xl font-bold mt-12 mb-6 text-orange-500">Featured Anime</h1>
-    <div id="animeGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"></div>
-  </main>
-
   <!-- Video Modal -->
-  <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-90 flex items-center justify-center p-4 hidden z-50">
-    <div class="relative w-full max-w-4xl">
-      <button onclick="closeModal()" class="absolute top-2 right-2 text-white text-3xl font-bold hover:text-orange-600">&times;</button>
-      <div class="aspect-w-16 aspect-h-9">
+  <div id="videoModal" class="fixed inset-0 bg-black bg-opacity-95 flex items-center justify-center p-4 hidden z-50">
+    <div class="relative w-full max-w-4xl rounded shadow-lg">
+      <button onclick="closeModal()" class="absolute top-2 right-2 text-red-600 text-4xl font-bold hover:text-red-400 z-50">&times;</button>
+      <div class="aspect-w-16 aspect-h-9 bg-black rounded overflow-hidden">
         <iframe
           id="videoFrame"
           src=""
@@ -91,18 +164,19 @@
           class="w-full h-full"
         ></iframe>
       </div>
-      <h2 id="videoTitle" class="text-white text-2xl font-semibold mt-4"></h2>
-      <p id="videoDescription" class="text-gray-300 mt-1"></p>
+      <h2 id="videoTitle" class="text-white text-2xl font-semibold mt-4 select-text"></h2>
+      <p id="videoDescription" class="text-gray-400 mt-1 select-text"></p>
     </div>
   </div>
 
-  <!-- Footer -->
-  <footer class="bg-orange-700 text-white text-center py-4">
-    &copy; 2025 ToonnaKage. All rights reserved.
-  </footer>
-
   <!-- Scripts -->
   <script>
+    // Sidebar toggle on small screens
+    function toggleSidebar() {
+      const sidebar = document.querySelector("aside");
+      sidebar.classList.toggle("-translate-x-full");
+    }
+
     const animeList = [
       {
         title: "Naruto",
@@ -114,137 +188,4 @@
         title: "Attack on Titan",
         image: "https://cdn.myanimelist.net/images/anime/10/47347.jpg",
         description: "Humans fight against giant Titans.",
-        videoUrl: "https://www.youtube.com/embed/MGRm4IzK1SQ",
-      },
-      {
-        title: "Demon Slayer",
-        image: "https://cdn.myanimelist.net/images/anime/1286/99889.jpg",
-        description: "A boy battles demons to save his sister.",
-        videoUrl: "https://www.youtube.com/embed/VQGCKyvzIM4",
-      },
-    ];
-
-    function renderAnimeList(list) {
-      const grid = document.getElementById("animeGrid");
-      grid.innerHTML = "";
-      list.forEach((anime) => {
-        const card = document.createElement("div");
-        card.className =
-          "bg-gray-900 rounded shadow-lg overflow-hidden cursor-pointer hover:shadow-orange-700 hover:scale-105 transition";
-        card.innerHTML = `
-          <img src="${anime.image}" class="w-full h-56 object-cover"/>
-          <div class="p-4">
-            <h3 class="text-xl font-semibold mb-2">${anime.title}</h3>
-            <p class="text-gray-400 text-sm">${anime.description}</p>
-            <button onclick="toggleWatchlist('${anime.title}')" class="mt-2 px-3 py-1 bg-orange-600 text-white rounded text-xs">Add to Watchlist</button>
-          </div>
-        `;
-        card.onclick = () => openModal(anime);
-        grid.appendChild(card);
-      });
-    }
-
-    function openModal(anime) {
-      document.getElementById("videoFrame").src = anime.videoUrl + "?autoplay=1";
-      document.getElementById("videoTitle").textContent = anime.title;
-      document.getElementById("videoDescription").textContent = anime.description;
-      document.getElementById("videoModal").classList.remove("hidden");
-      document.body.style.overflow = "hidden";
-    }
-
-    function closeModal() {
-      document.getElementById("videoModal").classList.add("hidden");
-      document.getElementById("videoFrame").src = "";
-      document.body.style.overflow = "auto";
-    }
-
-    function filterAnime() {
-      const query =
-        (document.getElementById("searchInput").value ||
-          document.getElementById("searchInputMobile").value ||
-          ""
-        ).toLowerCase();
-      const filtered = animeList.filter((anime) =>
-        anime.title.toLowerCase().includes(query)
-      );
-      renderAnimeList(filtered);
-      addToSearchHistory(query);
-    }
-
-    function toggleModal() {
-      document.getElementById("authModal").classList.toggle("hidden");
-    }
-
-    let isSignup = false;
-    function toggleAuth() {
-      isSignup = !isSignup;
-      document.getElementById("modalTitle").textContent = isSignup ? "Sign Up" : "Login";
-      document.getElementById("toggleText").textContent = isSignup
-        ? "Already have an account?"
-        : "Don't have an account?";
-      event.target.textContent = isSignup ? "Login" : "Sign up";
-    }
-
-    function handleAuth(event) {
-      event.preventDefault();
-      const email = document.getElementById("email").value;
-      localStorage.setItem("toonnakageUser", email);
-      alert(`${isSignup ? "Signed up" : "Logged in"} as ${email}`);
-      toggleModal();
-    }
-
-    function toggleTheme() {
-      document.body.classList.toggle("light-mode");
-    }
-
-    function toggleWatchlist(title) {
-      let list = JSON.parse(localStorage.getItem("watchlist")) || [];
-      if (!list.includes(title)) {
-        list.push(title);
-      } else {
-        list = list.filter((item) => item !== title);
-      }
-      localStorage.setItem("watchlist", JSON.stringify(list));
-      alert(`Watchlist updated: ${list.join(", ")}`);
-    }
-
-    function addToSearchHistory(query) {
-      if (!query) return;
-      let history = JSON.parse(localStorage.getItem("searchHistory")) || [];
-      if (!history.includes(query)) {
-        history.unshift(query);
-        if (history.length > 10) history.pop();
-        localStorage.setItem("searchHistory", JSON.stringify(history));
-      }
-    }
-
-    async function fetchAnime(query = "naruto") {
-      const res = await fetch(`https://api.jikan.moe/v4/anime?q=${query}&limit=6`);
-      const data = await res.json();
-      showTrending(data.data);
-    }
-
-    function showTrending(animeList) {
-      const container = document.getElementById("animeList");
-      container.innerHTML = "";
-      animeList.forEach((anime) => {
-        const card = `
-          <div class="bg-gray-900 text-white rounded-lg overflow-hidden shadow-md cursor-pointer" onclick='openModal({title: "${anime.title.replace(/"/g, '\\"')}", image: "${anime.images.jpg.image_url}", description: "${(anime.synopsis || "").replace(/"/g, '\\"')}", videoUrl: ""})'>
-            <img src="${anime.images.jpg.image_url}" class="w-full h-48 object-cover" alt="${anime.title}" />
-            <div class="p-4">
-              <h3 class="text-lg font-bold">${anime.title}</h3>
-              <p class="text-sm">${anime.synopsis ? anime.synopsis.slice(0, 100) + "..." : "No description"}</p>
-            </div>
-          </div>
-        `;
-        container.innerHTML += card;
-      });
-    }
-
-    document.addEventListener("DOMContentLoaded", () => {
-      renderAnimeList(animeList);
-      fetchAnime();
-    });
-  </script>
-</body>
-          </html>
+        videoUrl: "
